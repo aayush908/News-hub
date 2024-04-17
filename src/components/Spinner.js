@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import loading from './spinner.gif';
 
 const Spinner= () =>{
@@ -12,6 +12,6 @@ const Spinner= () =>{
     
 
   }
-export default Spinner;
+export default Spinner; 
 
 
