@@ -87,6 +87,7 @@ const News =(props)=> {
     // console.log("i am called");
     
     // console.log(props.category);
+    // setLoading(true)
     const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pageSize=9`;
     let data = await fetch(url);
     let parsedata = await data.json();
@@ -107,7 +108,7 @@ const News =(props)=> {
   
     return (
       <div className="container my-3">
-        <h2 className="text-center"> Latest Headlines of News-hub</h2>
+        <h2 className="text-center " style ={{marginTop:'90px'}} > Latest Headlines of News-hub</h2>
         {/* {this.state.loading && <Spinner />} */}
         <InfiniteScroll
     dataLength={articles.length}
