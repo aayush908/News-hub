@@ -34,9 +34,10 @@ export default class App  extends Component {
         height={3}
         onLoaderFinished={() => this.setProgress(0)}
       />
+      <News setProgress = {this.setProgress} apikey = {this.api_key}   key='general'  category="general" />
        
     <Routes>
-    <Route exact path="/" element={[<News setProgress = {this.setProgress} apikey = {this.api_key}   key='general'  category="general" />  ]} />
+    <Route exact path="/" element={<News setProgress = {this.setProgress} apikey = {this.api_key}   key='general'  category="general" />} />
     <Route exact path = "/sport" element = {<News setProgress = {this.setProgress} apikey = {this.api_key}   key='sport'  category = "sport"/>} />
     <Route exact path = "/health" element = {<News setProgress = {this.setProgress}  apikey = {this.api_key}  key='health' category = "health"/>} />
     <Route exact path = "/entertainment" element = {<News setProgress = {this.setProgress} apikey = {this.api_key}  key='entertainment'  category = "entertainment"/>} />

@@ -19,6 +19,7 @@ const News =(props)=> {
   // const [totalPage, setTotalPage] = useState(0)
   const [totalresults, settotalresults] = useState(0)
   
+  
 
  const updatenews = async ()=>{ 
     props.setProgress(0);
@@ -44,7 +45,7 @@ const News =(props)=> {
  useEffect(()=> {
   updatenews();
    
-  } , [])
+  })
 
   // handelNextBtn = async () => {
   //   // this.setState({ loading: true });
@@ -88,6 +89,7 @@ const News =(props)=> {
     
     // console.log(props.category);
     // setLoading(true)
+    console.log(loading)
     const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pageSize=9`;
     let data = await fetch(url);
     let parsedata = await data.json();
