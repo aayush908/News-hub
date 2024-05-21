@@ -1,4 +1,4 @@
-import React, {useEffect , useState} from "react";
+import React, {useEffect , useState , useCallback} from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 // import PropTypes from "prop-types";
@@ -17,35 +17,87 @@ const News =(props)=> {
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   // const [totalPage, setTotalPage] = useState(0)
-  const [totalresults, settotalresults] = useState(0)
-  
-  
+  // const [totalresults, settotalresults] = useState(0)
+  const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const{setProgress } = props
 
- const updatenews = async ()=>{ 
-    props.setProgress(0);
-    setLoading(true)
-    // this.setState({ loading: true });
-    // console.log(props.category);
-
-    const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&pageSize=9`;
-    props.setProgress(30);
+  const updatenews = useCallback(async () => {
+    setProgress(0);
+    setLoading(true);
+    try {
+    // const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&pageSize=9`;
+    const url = "https://mocki.io/v1/f1d88289-7db3-40b9-aa41-eaff946ebaabd"
     let data = await fetch(url);
-    props.setProgress(50);
     let parsedata = await data.json();
-    props.setProgress(70);
-    // console.log(parsedata.totalResults)
-    // this.setState({ totalPage: parsedata.totalResults / 9 , totalresults:parsedata.totalResults });
-    // console.log(this.state.totalresults);
-    setArticles(parsedata.articles)
-    setLoading(false)
-    settotalresults(parsedata.totalResults)
-    // this.setState({ articles: parsedata.articles, loading: false , totalresults:parsedata.totalResults });
-    props.setProgress(100); }
 
- useEffect(()=> {
-  updatenews();
+    setArticles(parsedata.articles);
+    setLoading(false);
+    // settotalresults(parsedata.totalResults);
+    // console.log(totalresults)
+    // props.setProgress(100);
+    setProgress(100)
+  }
+    catch (error) {
+      setError(error.message);
+      // setLoading(false);
+      setHasMore(false);
+      // props.setProgress(100);
+    }
+    finally {
+      setLoading(false);
+    }
+  },[ setProgress]);
+
+  useEffect(() => {
    
-  })
+    updatenews();
+  }, [updatenews ]);
+   
+  
+
+//   const updatenews = async ()=>{ 
+//     props.setProgress(0);
+//     setLoading(true)
+//     // this.setState({ loading: true });
+//     // console.log(props.category);
+
+//     const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&pageSize=9`;
+//     props.setProgress(30);
+//     let data = await fetch(url);
+   
+//     props.setProgress(50);
+//     let parsedata = await data.json();
+//     props.setProgress(70);
+//     // console.log(parsedata.totalResults)
+//     // this.setState({ totalPage: parsedata.totalResults / 9 , totalresults:parsedata.totalResults });
+//     // console.log(this.state.totalresults);
+//     setArticles(parsedata.articles)
+//     setLoading(false)
+//     settotalresults(parsedata.totalResults)
+//     // this.setState({ articles: parsedata.articles, loading: false , totalresults:parsedata.totalResults });
+//     props.setProgress(100); };
+    
+    
+//     // else {
+//     //   setArticles({no})
+
+//     // }
+  
+
+
+
+
+
+  
+  
+
+
+
+// // eslint-disable-next-line react-hooks/exhaustive-deps
+// useEffect(() => {
+//   updatenews();
+// }, []); 
 
   // handelNextBtn = async () => {
   //   // this.setState({ loading: true });
@@ -89,8 +141,10 @@ const News =(props)=> {
     
     // console.log(props.category);
     // setLoading(true)
-    console.log(loading)
-    const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pageSize=9`;
+    // console.log(loading)
+    try {
+    // const url = `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pageSize=9`;
+    const url = "https://mocki.io/v1/f1d88289-7db3-40b9-aa41-eaff946ebaab"
     let data = await fetch(url);
     let parsedata = await data.json();
     // console.log(parsedata.articles)
@@ -98,6 +152,16 @@ const News =(props)=> {
     setPage(page+1)
     setArticles(articles.concat(parsedata.articles))
     setLoading(false)
+    }
+    catch (error) {
+      setError(error.message);
+      setHasMore(false);
+      // setLoading(false);
+    }
+    finally {
+      setLoading(false);
+      await new Promise(resolve => setTimeout(resolve, 2000)); 
+    }
     // this.setState({page:this.state.page+1 , loading:true}) ;
 
     // this.setState({
@@ -107,32 +171,37 @@ const News =(props)=> {
     // });
   
   }
-  
+
     return (
-      <div className="container my-3">
+
+       <div className="container my-3">
         <h2 className="text-center " style ={{marginTop:'90px'}} > Latest Headlines of News-hub</h2>
         {/* {this.state.loading && <Spinner />} */}
+        {error && <div className="alert alert-danger">{error} </div>}
+        {loading && <Spinner />}
         <InfiniteScroll
     dataLength={articles.length}
     next={fetchMoreData}
     // style={{ display: 'flex', flexDirection: 'column-reverse' }} //To put endMessage and loader to the top.
     // inverse={true} //
-    hasMore={articles.length !== totalresults}
+    // hasMore={articles.length !== totalresults}
+    hasMore={hasMore}
+    
     loader={<Spinner/>}
     // scrollableTarget="scrollableDiv" 
   > 
-        <div className="row container">
+      <div className="row container">
           {articles.map((element) => {
             // console.log(element.title);
             return (
-              <div className="col-md-4" key={element.url}>
+              <div className="col-md-4" key={element.title}>
                 <NewsItem
                   title={element.title}
-                  description={element.description}
-                  ImageUrl={element.urlToImage}
-                  newsurl={element.url}
-                  author={element.author}
-                  date={element.publishedAt}
+                  // description={element.description}
+                  // ImageUrl={element.urlToImage}
+                  // newsurl={element.url}
+                  // author={element.author}
+                  // date={element.publishedAt}
                 />
               </div>
             );
@@ -161,5 +230,6 @@ const News =(props)=> {
         </div> */}
       </div>
     );
+    
   }
 export default News;
